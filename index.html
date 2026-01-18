@@ -1414,39 +1414,7 @@ Respond in this exact JSON format:
 ```
 
 </body>
-</html>`;
-        }
-
-```
-    function previewGuide() {
-        const html = generateOutputHTML();
-        const iframe = document.getElementById('previewFrame');
-        iframe.srcdoc = html;
-        document.getElementById('previewModal').style.display = 'block';
-    }
-    
-    function closePreview() {
-        document.getElementById('previewModal').style.display = 'none';
-    }
-    
-    function downloadGuide() {
-        const html = generateOutputHTML();
-        const title = document.getElementById('guideTitle').value || 'itabs-guide';
-        const filename = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html';
-        
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-</script>
-```
-
-</body>
-</html>`;
+</html>`;`;
         }
 
 ```
