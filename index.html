@@ -21,383 +21,85 @@
             --error: #ef4444;
             --radius: 12px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+        .container { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 24px 16px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 6px;
-        }
-
+        .header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 6px; }
         .header h1 span { color: var(--accent); }
+        .header p { color: var(--text-dim); font-size: 0.95rem; }
+        .badge { display: inline-block; background: var(--success-glow); color: var(--success); font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-top: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
 
-        .header p {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--success-glow);
-            color: var(--success);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-top: 8px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        /* Steps */
-        .step {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: border-color 0.2s;
-        }
-
+        .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
         .step.active { border-color: var(--accent); }
-        .step.done { border-color: var(--success); opacity: 0.7; }
+        .step-label { font-size: 0.75rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+        .step h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+        .step p.hint { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 16px; }
 
-        .step-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 10px;
-        }
+        label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-dim); margin-bottom: 6px; }
+        input[type="text"], textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; padding: 12px 14px; border-radius: 8px; outline: none; transition: border-color 0.2s; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+        textarea { min-height: 120px; resize: vertical; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.7; }
 
-        .step.done .step-label { color: var(--success); }
-
-        .step h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .step p.hint {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-
-        /* Input fields */
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            margin-bottom: 6px;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.95rem;
-            padding: 12px 14px;
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input[type="text"]:focus, textarea:focus {
-            border-color: var(--accent);
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            line-height: 1.7;
-        }
-
-        textarea.large { min-height: 200px; }
-
-        /* URL input row */
-        .url-row {
-            display: flex;
-            gap: 8px;
-        }
-
+        .url-row { display: flex; gap: 8px; }
         .url-row input { flex: 1; }
 
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover:not(:disabled) { background: #2563eb; }
+        .btn-secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover:not(:disabled) { background: var(--border); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover:not(:disabled) { background: #16a34a; }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .status { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; margin-top: 12px; line-height: 1.5; }
+        .status.loading { background: var(--accent-glow); color: var(--accent); }
+        .status.success { background: var(--success-glow); color: var(--success); }
+        .status.error { background: rgba(239, 68, 68, 0.12); color: var(--error); }
+        .status.info { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            background: #2563eb;
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--surface-2);
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: var(--border);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover:not(:disabled) {
-            background: #16a34a;
-        }
-
-        /* Status messages */
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-top: 12px;
-        }
-
-        .status.loading {
-            background: var(--accent-glow);
-            color: var(--accent);
-        }
-
-        .status.success {
-            background: var(--success-glow);
-            color: var(--success);
-        }
-
-        .status.error {
-            background: rgba(239, 68, 68, 0.12);
-            color: var(--error);
-        }
-
-        .status.info {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--warning);
-        }
-
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top-color: currentColor;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            flex-shrink: 0;
-        }
-
+        .spinner { width: 16px; height: 16px; border: 2px solid transparent; border-top-color: currentColor; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; margin-top: 2px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Transcript preview */
-        .transcript-preview {
-            margin-top: 12px;
-        }
+        .transcript-preview { margin-top: 12px; }
+        .transcript-preview summary { color: var(--text-dim); font-size: 0.85rem; cursor: pointer; padding: 8px 0; }
+        .transcript-text { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; max-height: 200px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.8; color: var(--text-dim); margin-top: 8px; }
 
-        .transcript-preview summary {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 8px 0;
-        }
+        .stats { display: flex; gap: 16px; margin-top: 12px; }
+        .stat { font-size: 0.8rem; color: var(--text-dim); }
+        .stat strong { color: var(--text); font-weight: 600; }
 
-        .transcript-preview summary:hover { color: var(--text); }
+        .or-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--text-dim); font-size: 0.8rem; }
+        .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-        .transcript-text {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            line-height: 1.8;
-            color: var(--text-dim);
-            margin-top: 8px;
-        }
+        .how-it-works { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 16px; }
+        .how-it-works h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; }
+        .flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .flow-step { background: var(--surface-2); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; }
+        .flow-arrow { color: var(--accent); font-size: 0.9rem; }
 
-        /* Stats row */
-        .stats {
-            display: flex;
-            gap: 16px;
-            margin-top: 12px;
-        }
-
-        .stat {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        .stat strong {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        /* OR divider */
-        .or-divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 16px 0;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        .or-divider::before,
-        .or-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* How it works */
-        .how-it-works {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-bottom: 16px;
-        }
-
-        .how-it-works h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .flow {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .flow-step {
-            background: var(--surface-2);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
-
-        .flow-arrow {
-            color: var(--accent);
-            font-size: 0.9rem;
-        }
-
-        /* API info */
-        .api-info {
-            background: var(--surface-2);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-top: 12px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
+        .api-info { background: var(--surface-2); border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 0.8rem; color: var(--text-dim); }
         .api-info strong { color: var(--text); }
+        .api-info a { color: var(--accent); text-decoration: none; }
 
-        /* Gemini key section */
-        .key-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
+        .key-row { display: flex; gap: 8px; align-items: center; }
+        .key-row input { flex: 1; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
 
-        .key-row input {
-            flex: 1;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-        }
+        .output-section { display: none; }
+        .output-section.visible { display: block; }
 
-        .key-saved {
-            color: var(--success);
-            font-size: 0.8rem;
-        }
+        /* Debug log */
+        .debug-log { margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); max-height: 120px; overflow-y: auto; padding: 8px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); }
+        .debug-log .log-line { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .debug-log .log-ok { color: var(--success); }
+        .debug-log .log-fail { color: var(--error); }
+        .debug-log .log-try { color: var(--warning); }
 
-        /* Output section */
-        .output-section {
-            display: none;
-        }
+        .footer { text-align: center; color: var(--text-dim); font-size: 0.8rem; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .footer a { color: var(--accent); text-decoration: none; }
 
-        .output-section.visible {
-            display: block;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        /* Responsive */
         @media (max-width: 480px) {
             .url-row { flex-direction: column; }
             .flow { flex-direction: column; align-items: flex-start; }
@@ -408,14 +110,12 @@
 <body>
     <div class="container">
 
-        <!-- Header -->
         <div class="header">
             <h1><span>iTabs</span> Generator</h1>
             <p>Paste a YouTube link → Get your guide</p>
             <div class="badge">✨ Auto-fetch transcript — no copy-paste</div>
         </div>
 
-        <!-- How it works -->
         <div class="how-it-works">
             <h3>How it works</h3>
             <div class="flow">
@@ -437,16 +137,13 @@
 
             <label for="videoUrl">YouTube URL</label>
             <div class="url-row">
-                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." 
-                       oninput="updateThumbnail()">
-                <button class="btn btn-primary" id="fetchBtn" onclick="fetchTranscript()">
-                    Fetch
-                </button>
+                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." oninput="updateVideoId()">
+                <button class="btn btn-primary" id="fetchBtn" onclick="fetchTranscript()">Fetch</button>
             </div>
 
             <div id="fetchStatus"></div>
+            <div id="debugLog" style="display:none" class="debug-log"></div>
 
-            <!-- Transcript preview (appears after fetch) -->
             <div id="transcriptResult" style="display:none">
                 <div class="stats" id="transcriptStats"></div>
                 <details class="transcript-preview">
@@ -457,33 +154,28 @@
 
             <div class="or-divider">or paste your own transcript below</div>
 
-            <label for="manualTranscript">Manual transcript (optional)</label>
-            <textarea id="manualTranscript" placeholder="If auto-fetch doesn't work, paste your transcript here..."></textarea>
+            <label for="manualTranscript">Manual transcript (if auto-fetch doesn't work)</label>
+            <textarea id="manualTranscript" placeholder="Copy from YouTube's caption button, or use youtubetotranscript.com"></textarea>
 
             <div class="api-info">
-                <strong>Free APIs used:</strong> We try two free transcript services (no API key needed, no account). 
-                If both fail, paste your transcript manually using the 
-                <a href="https://youtubetotranscript.com" target="_blank" style="color:var(--accent)">YouTubeToTranscript</a> site.
+                <strong>How it works:</strong> We try 3 free transcript APIs (no account needed).
+                If none work, paste manually from <a href="https://youtubetotranscript.com" target="_blank">YouTubeToTranscript.com</a>
             </div>
         </div>
 
-        <!-- Step 2: Gemini API Key -->
+        <!-- Step 2: Gemini Key -->
         <div class="step" id="step2">
             <div class="step-label">Step 2</div>
             <h2>Gemini AI Key</h2>
             <p class="hint">Free from Google — creates the teachable content</p>
-
             <label for="geminiKey">API Key</label>
             <div class="key-row">
-                <input type="text" id="geminiKey" placeholder="AIza..." 
-                       value="">
+                <input type="text" id="geminiKey" placeholder="AIza...">
                 <button class="btn btn-secondary" onclick="saveKey()">Save</button>
             </div>
             <div id="keyStatus"></div>
-
             <div class="api-info">
-                Don't have one? <a href="https://aistudio.google.com/apikey" target="_blank" 
-                style="color:var(--accent)">Get a free Gemini API key</a> (takes 30 seconds)
+                Don't have one? <a href="https://aistudio.google.com/apikey" target="_blank">Get a free Gemini API key</a> (takes 30 seconds)
             </div>
         </div>
 
@@ -492,19 +184,15 @@
             <div class="step-label">Step 3</div>
             <h2>Quick Context</h2>
             <p class="hint">Help the AI make a better guide</p>
-
             <label for="audience">Who is this for?</label>
-            <input type="text" id="audience" placeholder="e.g. Me — a boilermaker learning about AI tools" 
-                   style="margin-bottom: 12px;">
-
+            <input type="text" id="audience" placeholder="e.g. Me — a boilermaker learning about AI tools" style="margin-bottom: 12px;">
             <label for="goal">What do you want to remember?</label>
             <input type="text" id="goal" placeholder="e.g. The key steps for setting up Claude Code">
         </div>
 
-        <!-- Generate Button -->
+        <!-- Generate -->
         <div style="text-align: center; margin: 24px 0;">
-            <button class="btn btn-success" id="generateBtn" onclick="generateiTabs()" 
-                    style="padding: 14px 32px; font-size: 1rem;" disabled>
+            <button class="btn btn-success" id="generateBtn" onclick="generateiTabs()" style="padding: 14px 32px; font-size: 1rem;" disabled>
                 🚀 Create My iTabs Guide
             </button>
             <div id="generateStatus" style="margin-top: 12px;"></div>
@@ -516,7 +204,6 @@
                 <div class="step-label" style="color: var(--success)">Done</div>
                 <h2>Your iTabs Guide</h2>
                 <p class="hint">Preview it, then download</p>
-
                 <div style="display: flex; gap: 8px; margin-top: 12px;">
                     <button class="btn btn-primary" onclick="previewOutput()">👁 Preview</button>
                     <button class="btn btn-success" onclick="downloadOutput()">💾 Download HTML</button>
@@ -531,22 +218,16 @@
     </div>
 
     <script>
-        // ========================================
-        // STATE
-        // ========================================
+        // ========== STATE ==========
         let transcriptData = null;
         let videoId = null;
         let generatedHTML = null;
 
-        // Load saved Gemini key
+        // Load saved key
         const savedKey = localStorage.getItem('gemini_api_key');
-        if (savedKey) {
-            document.getElementById('geminiKey').value = savedKey;
-        }
+        if (savedKey) document.getElementById('geminiKey').value = savedKey;
 
-        // ========================================
-        // VIDEO ID EXTRACTION
-        // ========================================
+        // ========== VIDEO ID ==========
         function extractVideoId(url) {
             const patterns = [
                 /(?:v=|\/v\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
@@ -560,15 +241,29 @@
             return null;
         }
 
-        function updateThumbnail() {
-            const url = document.getElementById('videoUrl').value.trim();
-            videoId = extractVideoId(url);
+        function updateVideoId() {
+            videoId = extractVideoId(document.getElementById('videoUrl').value.trim());
             checkReady();
         }
 
-        // ========================================
-        // TRANSCRIPT FETCHING — TWO FREE APIs
-        // ========================================
+        // ========== DEBUG LOG ==========
+        function debugLog(msg, type) {
+            const log = document.getElementById('debugLog');
+            log.style.display = 'block';
+            const cls = type === 'ok' ? 'log-ok' : type === 'fail' ? 'log-fail' : 'log-try';
+            log.innerHTML += `<div class="log-line ${cls}">${new Date().toLocaleTimeString()} — ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // ========== FETCH WITH TIMEOUT ==========
+        function fetchWithTimeout(url, options, timeout) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeout);
+            return fetch(url, { ...options, signal: controller.signal })
+                .finally(() => clearTimeout(timer));
+        }
+
+        // ========== TRANSCRIPT FETCH ==========
         async function fetchTranscript() {
             const url = document.getElementById('videoUrl').value.trim();
             videoId = extractVideoId(url);
@@ -581,109 +276,108 @@
             const fetchBtn = document.getElementById('fetchBtn');
             fetchBtn.disabled = true;
             fetchBtn.textContent = '...';
+            document.getElementById('debugLog').innerHTML = '';
 
-            showStatus('fetchStatus', 'loading', 'Fetching transcript (API 1 of 2)...');
+            showStatus('fetchStatus', 'loading', 'Fetching transcript...');
 
-            // Try API 1: jaypaun007's free Vercel API
+            // ---- API 1: TubeText (with timestamps) ----
+            debugLog(`Trying TubeText API for video: ${videoId}`, 'try');
             try {
-                const resp1 = await fetchWithTimeout(
+                const resp = await fetchWithTimeout(
+                    `https://tubetext.vercel.app/youtube/transcript-with-timestamps?video_id=${videoId}`,
+                    { method: 'GET' },
+                    12000
+                );
+                debugLog(`TubeText responded: ${resp.status} ${resp.statusText}`, resp.ok ? 'ok' : 'fail');
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.success && data.data && data.data.full_text) {
+                        transcriptData = data.data.full_text;
+                        const title = data.data.details?.title || '';
+                        debugLog(`Got transcript: ${transcriptData.length} chars. Title: ${title}`, 'ok');
+                        showTranscriptSuccess(transcriptData, 'TubeText API', title);
+                        done(); return;
+                    } else {
+                        debugLog(`TubeText returned success=false or empty data`, 'fail');
+                    }
+                }
+            } catch (e) {
+                debugLog(`TubeText error: ${e.message}`, 'fail');
+            }
+
+            // ---- API 2: jaypaun007 (POST, plain text) ----
+            debugLog(`Trying jaypaun007 API...`, 'try');
+            try {
+                const resp = await fetchWithTimeout(
                     'https://youtube-transcript-api-tau-one.vercel.app/transcript',
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ video_url: `https://www.youtube.com/watch?v=${videoId}` })
                     },
-                    15000
+                    12000
                 );
+                debugLog(`jaypaun007 responded: ${resp.status} ${resp.statusText}`, resp.ok ? 'ok' : 'fail');
 
-                if (resp1.ok) {
-                    const data = await resp1.json();
+                if (resp.ok) {
+                    const data = await resp.json();
                     if (data.transcript && data.transcript.length > 50) {
                         transcriptData = data.transcript;
-                        showTranscriptSuccess(transcriptData, 'Free API (no key needed)');
-                        fetchBtn.disabled = false;
-                        fetchBtn.textContent = 'Fetch';
-                        checkReady();
-                        return;
+                        debugLog(`Got transcript: ${transcriptData.length} chars`, 'ok');
+                        showTranscriptSuccess(transcriptData, 'jaypaun007 API');
+                        done(); return;
+                    } else {
+                        debugLog(`jaypaun007 returned empty/short transcript`, 'fail');
                     }
                 }
             } catch (e) {
-                console.log('API 1 failed:', e.message);
+                debugLog(`jaypaun007 error: ${e.message}`, 'fail');
             }
 
-            // Try API 2: mongj's Vercel API (with timestamps)
-            showStatus('fetchStatus', 'loading', 'API 1 didn\'t work, trying API 2...');
-
+            // ---- API 3: mongj/scribr (GET, text format) ----
+            debugLog(`Trying Scribr API...`, 'try');
             try {
-                const resp2 = await fetchWithTimeout(
+                const resp = await fetchWithTimeout(
                     `https://youtube-transcriber-api.vercel.app/v1/transcripts?id=${videoId}&lang=en&type=text&lb=1`,
                     { method: 'GET' },
-                    15000
+                    12000
                 );
+                debugLog(`Scribr responded: ${resp.status} ${resp.statusText}`, resp.ok ? 'ok' : 'fail');
 
-                if (resp2.ok) {
-                    const data = await resp2.json();
-                    if (data.transcripts && data.transcripts.length > 0) {
-                        const bestTranscript = data.transcripts[0];
-                        transcriptData = bestTranscript.text || '';
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.transcripts && data.transcripts.length > 0 && data.transcripts[0].text) {
+                        transcriptData = data.transcripts[0].text;
                         if (transcriptData.length > 50) {
-                            showTranscriptSuccess(transcriptData, 'Free API 2 (no key needed)');
-                            fetchBtn.disabled = false;
-                            fetchBtn.textContent = 'Fetch';
-                            checkReady();
-                            return;
+                            debugLog(`Got transcript: ${transcriptData.length} chars`, 'ok');
+                            showTranscriptSuccess(transcriptData, 'Scribr API');
+                            done(); return;
                         }
                     }
+                    debugLog(`Scribr returned empty transcript`, 'fail');
                 }
             } catch (e) {
-                console.log('API 2 failed:', e.message);
+                debugLog(`Scribr error: ${e.message}`, 'fail');
             }
 
-            // Try API 3: Scribr / alternative endpoint
-            showStatus('fetchStatus', 'loading', 'Trying one more...');
+            // ---- All failed ----
+            debugLog(`All 3 APIs failed. Manual paste needed.`, 'fail');
+            showStatus('fetchStatus', 'error',
+                "Auto-fetch didn't work for this video. This usually means CORS blocking or the video has no captions. " +
+                "No worries — paste your transcript manually below. The debug log above shows what happened.");
 
-            try {
-                const resp3 = await fetchWithTimeout(
-                    `https://youtube-transcriber-api.vercel.app/v1/transcripts?id=${videoId}&type=text`,
-                    { method: 'GET' },
-                    15000
-                );
-
-                if (resp3.ok) {
-                    const data = await resp3.json();
-                    if (data.transcripts && data.transcripts.length > 0) {
-                        transcriptData = data.transcripts[0].text || '';
-                        if (transcriptData.length > 50) {
-                            showTranscriptSuccess(transcriptData, 'Scribr API (free)');
-                            fetchBtn.disabled = false;
-                            fetchBtn.textContent = 'Fetch';
-                            checkReady();
-                            return;
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log('API 3 failed:', e.message);
+            function done() {
+                fetchBtn.disabled = false;
+                fetchBtn.textContent = 'Fetch';
+                checkReady();
             }
 
-            // All failed
-            showStatus('fetchStatus', 'error', 
-                "Couldn't auto-fetch this transcript. The video might not have captions, or the free APIs are busy. " +
-                "No worries — paste it manually below.");
             fetchBtn.disabled = false;
-            fetchBtn.textContent = 'Fetch';
+            fetchBtn.textContent = 'Retry';
         }
 
-        function fetchWithTimeout(url, options, timeout) {
-            return Promise.race([
-                fetch(url, options),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout')), timeout)
-                )
-            ]);
-        }
-
-        function showTranscriptSuccess(text, source) {
+        function showTranscriptSuccess(text, source, title) {
             const wordCount = text.split(/\s+/).length;
             const readMins = Math.ceil(wordCount / 200);
 
@@ -693,15 +387,14 @@
                 <div class="stat"><strong>~${readMins} min</strong> read</div>
                 <div class="stat">via <strong>${source}</strong></div>
             `;
-            document.getElementById('transcriptText').textContent = text.substring(0, 3000) + 
-                (text.length > 3000 ? '\n\n... [truncated for preview]' : '');
+            document.getElementById('transcriptText').textContent =
+                text.substring(0, 3000) + (text.length > 3000 ? '\n\n... [truncated for preview]' : '');
 
-            showStatus('fetchStatus', 'success', `Transcript fetched — ${wordCount.toLocaleString()} words`);
+            const titleNote = title ? ` — "${title}"` : '';
+            showStatus('fetchStatus', 'success', `Transcript fetched${titleNote} — ${wordCount.toLocaleString()} words`);
         }
 
-        // ========================================
-        // GEMINI KEY
-        // ========================================
+        // ========== GEMINI KEY ==========
         function saveKey() {
             const key = document.getElementById('geminiKey').value.trim();
             if (key) {
@@ -711,24 +404,18 @@
             }
         }
 
-        // ========================================
-        // READY CHECK
-        // ========================================
+        // ========== READY CHECK ==========
         function checkReady() {
             const hasTranscript = transcriptData || document.getElementById('manualTranscript').value.trim().length > 50;
             const hasKey = document.getElementById('geminiKey').value.trim().length > 5;
             const hasVideo = !!videoId;
-
             document.getElementById('generateBtn').disabled = !(hasTranscript && hasKey && hasVideo);
         }
 
-        // Listen for manual transcript changes too
         document.getElementById('manualTranscript').addEventListener('input', checkReady);
         document.getElementById('geminiKey').addEventListener('input', checkReady);
 
-        // ========================================
-        // GENERATE iTABS
-        // ========================================
+        // ========== GENERATE ==========
         async function generateiTabs() {
             const key = document.getElementById('geminiKey').value.trim();
             const transcript = transcriptData || document.getElementById('manualTranscript').value.trim();
@@ -740,7 +427,6 @@
             const generateBtn = document.getElementById('generateBtn');
             generateBtn.disabled = true;
             generateBtn.textContent = '⏳ Creating guide...';
-
             showStatus('generateStatus', 'loading', 'Sending to Gemini AI...');
 
             const prompt = `You are an expert at creating teachable, action-oriented guides from video content.
@@ -755,7 +441,7 @@ RULES:
 - Extract 4-7 key sections from the video
 - Each section needs: a clear title, a "Why it matters" explanation, the key steps/facts, and a practical takeaway
 - Write in simple, everyday language — no jargon
-- Include timestamps where you can identify them from the transcript
+- Include timestamps where you can identify them
 - Focus on ACTION — what should the reader DO with this info?
 - Make it scannable — someone should find what they need in 30 seconds
 
@@ -785,23 +471,18 @@ ${transcript.substring(0, 25000)}`;
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: prompt }] }],
-                            generationConfig: {
-                                temperature: 0.7,
-                                maxOutputTokens: 4096
-                            }
+                            generationConfig: { temperature: 0.7, maxOutputTokens: 4096 }
                         })
                     }
                 );
 
                 if (!resp.ok) {
                     const err = await resp.text();
-                    throw new Error(`Gemini error: ${resp.status} — ${err.substring(0, 200)}`);
+                    throw new Error(`Gemini ${resp.status}: ${err.substring(0, 200)}`);
                 }
 
                 const data = await resp.json();
                 const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-                // Parse JSON from response (strip backticks if present)
                 const cleaned = rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
                 const guide = JSON.parse(cleaned);
 
@@ -818,24 +499,23 @@ ${transcript.substring(0, 25000)}`;
             checkReady();
         }
 
-        // ========================================
-        // BUILD THE iTABS HTML
-        // ========================================
+        // ========== BUILD HTML ==========
         function buildHTML(guide) {
             const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
             const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
             let sectionsHTML = '';
             guide.sections.forEach((s, i) => {
-                const tsLink = s.timestamp ? 
-                    `<a href="${videoUrl}&t=${timestampToSeconds(s.timestamp)}" target="_blank" class="timestamp">▶ ${s.timestamp}</a>` : '';
+                const tsLink = s.timestamp
+                    ? `<a href="${videoUrl}&t=${timestampToSeconds(s.timestamp)}" target="_blank" class="timestamp">▶ ${s.timestamp}</a>`
+                    : '';
 
                 sectionsHTML += `
         <div class="itab-section">
             <div class="itab-header" onclick="toggleSection(this)">
                 <div class="itab-title">
-                    <span class="itab-number">${s.number || i+1}</span>
-                    <span class="itab-name">${escapeHtml(s.title)}</span>
+                    <span class="itab-number">${s.number || i + 1}</span>
+                    <span class="itab-name">${esc(s.title)}</span>
                 </div>
                 <button class="i-button">i</button>
             </div>
@@ -846,33 +526,33 @@ ${transcript.substring(0, 25000)}`;
                     <button class="tab" onclick="showTab(this, 'do-${i}')">What To Do</button>
                 </div>
                 <div class="tab-panel show" id="why-${i}">
-                    <p>${escapeHtml(s.why)}</p>
+                    <p>${esc(s.why)}</p>
                     ${tsLink}
                 </div>
                 <div class="tab-panel" id="what-${i}">
-                    <p>${escapeHtml(s.content)}</p>
+                    <p>${esc(s.content)}</p>
                 </div>
                 <div class="tab-panel" id="do-${i}">
-                    <p><strong>→ </strong>${escapeHtml(s.takeaway)}</p>
+                    <p><strong>→ </strong>${esc(s.takeaway)}</p>
                 </div>
             </div>
         </div>`;
             });
+
+            // NOTE: script tags split with concatenation to avoid breaking the parent script
+            const openScript = '<' + 'script>';
+            const closeScript = '</' + 'script>';
 
             return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(guide.title)} — iTabs Guide</title>
-    <meta property="og:title" content="${escapeHtml(guide.title)}">
+    <title>${esc(guide.title)} — iTabs Guide</title>
+    <meta property="og:title" content="${esc(guide.title)}">
     <meta property="og:image" content="${thumbUrl}">
     <style>
-        :root {
-            --bg: #0f1117; --surface: #1a1d27; --surface-2: #232733;
-            --border: #2d3140; --text: #e4e6ef; --text-dim: #8b8fa3;
-            --accent: #3b82f6; --success: #22c55e; --radius: 12px;
-        }
+        :root { --bg: #0f1117; --surface: #1a1d27; --surface-2: #232733; --border: #2d3140; --text: #e4e6ef; --text-dim: #8b8fa3; --accent: #3b82f6; --success: #22c55e; --radius: 12px; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; padding: 16px; }
@@ -902,26 +582,18 @@ ${transcript.substring(0, 25000)}`;
 </head>
 <body>
     <div class="container">
-        <h1>${escapeHtml(guide.title)}</h1>
+        <h1>${esc(guide.title)}</h1>
         <p class="subtitle">iTabs Guide • Tap sections to explore</p>
-
         <div class="video-embed">
             <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
         </div>
-
         ${sectionsHTML}
-
-        <footer>
-            Created with <a href="https://itabs.ai">iTabs</a> — watch once, reference forever
-        </footer>
+        <footer>Created with <a href="https://itabs.ai">iTabs</a> — watch once, reference forever</footer>
     </div>
-
-    <` + `script>
+    ${openScript}
         function toggleSection(header) {
-            const section = header.closest('.itab-section');
-            section.classList.toggle('open');
+            header.closest('.itab-section').classList.toggle('open');
         }
-
         function showTab(btn, panelId) {
             const section = btn.closest('.itab-content');
             section.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -929,37 +601,33 @@ ${transcript.substring(0, 25000)}`;
             btn.classList.add('active');
             document.getElementById(panelId).classList.add('show');
         }
-
-        // Open first section by default
         document.querySelector('.itab-section')?.classList.add('open');
-    <` + `/script>
+    ${closeScript}
 </body>
 </html>`;
         }
 
-        // ========================================
-        // HELPERS
-        // ========================================
+        // ========== HELPERS ==========
         function timestampToSeconds(ts) {
             if (!ts) return 0;
             const parts = ts.split(':').map(Number);
-            if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
-            if (parts.length === 2) return parts[0]*60 + parts[1];
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
             return parts[0] || 0;
         }
 
-        function escapeHtml(str) {
+        function esc(str) {
             if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
         }
 
-        function showStatus(elementId, type, message) {
-            const el = document.getElementById(elementId);
+        function showStatus(id, type, msg) {
+            const el = document.getElementById(id);
             const spinner = type === 'loading' ? '<div class="spinner"></div>' : '';
-            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '';
-            el.innerHTML = `<div class="status ${type}">${spinner}${icon} ${message}</div>`;
+            const icon = type === 'success' ? '✓ ' : type === 'error' ? '✗ ' : '';
+            el.innerHTML = `<div class="status ${type}">${spinner}${icon}${msg}</div>`;
         }
 
         function previewOutput() {
@@ -980,7 +648,6 @@ ${transcript.substring(0, 25000)}`;
             URL.revokeObjectURL(url);
         }
 
-        // Initial check
         checkReady();
     </script>
 </body>
