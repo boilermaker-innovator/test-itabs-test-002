@@ -3,502 +3,985 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iTabs SKILL.md Presenter</title>
+    <title>iTabs Generator — Auto Transcript</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface-2: #232733;
+            --border: #2d3140;
+            --text: #e4e6ef;
+            --text-dim: #8b8fa3;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --success: #22c55e;
+            --success-glow: rgba(34, 197, 94, 0.15);
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --radius: 12px;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1419; color: #e7e9ea; line-height: 1.6; min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; font-size: 2rem; margin-bottom: 10px; color: #7856ff; }
-        .subtitle { text-align: center; color: #8b98a5; margin-bottom: 30px; }
-        .ai-mode-banner { background: linear-gradient(135deg, rgba(0,186,124,0.2), rgba(120,86,255,0.2)); border: 1px solid #00ba7c; border-radius: 8px; padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .ai-mode-banner .icon { font-size: 1.5rem; }
-        .ai-mode-banner .text { color: #00ba7c; font-weight: 600; }
-        .ai-mode-banner .subtext { color: #8b98a5; font-size: 13px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
-        .panel { background: #1a1f26; border-radius: 12px; padding: 20px; border: 1px solid #2f3336; }
-        .panel h2 { font-size: 1rem; margin-bottom: 15px; color: #8b98a5; }
-        textarea { width: 100%; height: 300px; background: #0f1419; border: 1px solid #2f3336; border-radius: 8px; padding: 15px; color: #e7e9ea; font-family: monospace; font-size: 14px; resize: vertical; }
-        textarea:focus { outline: none; border-color: #7856ff; }
-        .url-row { display: flex; gap: 10px; margin-bottom: 15px; }
-        .url-input { flex: 1; background: #0f1419; border: 1px solid #2f3336; border-radius: 8px; padding: 12px 15px; color: #e7e9ea; font-size: 14px; }
-        .url-input:focus { outline: none; border-color: #1d9bf0; }
-        .url-input::placeholder { color: #8b98a5; }
-        .btn-row { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        button { padding: 12px 20px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
-        .btn-primary { background: #7856ff; color: white; }
-        .btn-primary:hover { background: #6344dd; }
-        .btn-secondary { background: #2f3336; color: #e7e9ea; }
-        .btn-secondary:hover { background: #3f4448; }
-        .btn-green { background: #00ba7c; color: white; }
-        .btn-green:hover { background: #00a06a; }
-        .btn-blue { background: #1d9bf0; color: white; }
-        .btn-blue:hover { background: #1a8cd8; }
-        .btn-fetch { background: #1d9bf0; color: white; padding: 12px 20px; }
-        .btn-fetch:hover { background: #1a8cd8; }
-        .preview { background: #0f1419; border-radius: 8px; padding: 20px; min-height: 350px; border: 1px solid #2f3336; }
-        .preview-empty { color: #8b98a5; text-align: center; padding-top: 100px; }
-        .ai-output-mode .grid { grid-template-columns: 1fr; }
-        .ai-output-mode .input-panel { display: none; }
-        #jsonOutput { display: none; background: #0f1419; border: 1px solid #2f3336; border-radius: 8px; padding: 15px; margin-top: 15px; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; max-height: 200px; overflow-y: auto; }
-        .skill-header { background: linear-gradient(135deg, rgba(120,86,255,0.2), rgba(29,155,240,0.2)); border: 1px solid #7856ff; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .skill-header h3 { color: #7856ff; margin-bottom: 8px; }
-        .skill-header p { color: #8b98a5; font-size: 14px; }
-        .itab { background: #1a1f26; border: 1px solid #2f3336; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
-        .itab-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; cursor: pointer; }
-        .itab-header:hover { background: #242b35; }
-        .itab-title { display: flex; align-items: center; gap: 10px; }
-        .itab-num { width: 28px; height: 28px; background: #7856ff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .itab-name { font-weight: 600; }
-        .itab-toggle { width: 26px; height: 26px; background: #7856ff; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
-        .itab-toggle.open { background: #00ba7c; }
-        .itab-content { display: none; padding: 15px; border-top: 1px solid #2f3336; color: #8b98a5; }
-        .itab-content.show { display: block; }
-        .itab-content p { margin: 10px 0; }
-        .itab-content ul, .itab-content ol { margin: 10px 0; padding-left: 20px; }
-        .itab-content li { margin: 5px 0; }
-        .itab-content strong { color: #e7e9ea; }
-        .itab-content code { background: #0f1419; padding: 2px 6px; border-radius: 4px; }
-        .itab-content pre { background: #0f1419; padding: 12px; border-radius: 6px; overflow-x: auto; margin: 10px 0; }
-        .fetch-status { font-size: 13px; color: #8b98a5; margin-top: 8px; }
-        .fetch-status.error { color: #f85149; }
-        .fetch-status.success { color: #00ba7c; }
-        .or-divider { display: flex; align-items: center; gap: 15px; margin: 15px 0; color: #8b98a5; font-size: 13px; }
-        .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #2f3336; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+
+        .header h1 span { color: var(--accent); }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--success-glow);
+            color: var(--success);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-top: 8px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* Steps */
+        .step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .step.active { border-color: var(--accent); }
+        .step.done { border-color: var(--success); opacity: 0.7; }
+
+        .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .step.done .step-label { color: var(--success); }
+
+        .step h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step p.hint {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        /* Input fields */
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            padding: 12px 14px;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.7;
+        }
+
+        textarea.large { min-height: 200px; }
+
+        /* URL input row */
+        .url-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .url-row input { flex: 1; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--border);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #16a34a;
+        }
+
+        /* Status messages */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        .status.loading {
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .status.success {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--error);
+        }
+
+        .status.info {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--warning);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Transcript preview */
+        .transcript-preview {
+            margin-top: 12px;
+        }
+
+        .transcript-preview summary {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+
+        .transcript-preview summary:hover { color: var(--text); }
+
+        .transcript-text {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+
+        /* Stats row */
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .stat {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .stat strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* OR divider */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* How it works */
+        .how-it-works {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .how-it-works h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .flow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: var(--surface-2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .flow-arrow {
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        /* API info */
+        .api-info {
+            background: var(--surface-2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .api-info strong { color: var(--text); }
+
+        /* Gemini key section */
+        .key-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .key-row input {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .key-saved {
+            color: var(--success);
+            font-size: 0.8rem;
+        }
+
+        /* Output section */
+        .output-section {
+            display: none;
+        }
+
+        .output-section.visible {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .url-row { flex-direction: column; }
+            .flow { flex-direction: column; align-items: flex-start; }
+            .flow-arrow { transform: rotate(90deg); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>iTabs SKILL.md Presenter</h1>
-        <p class="subtitle">Ugly file in → Beautiful preview out</p>
-        <div class="ai-mode-banner" id="aiBanner" style="display: none;">
-            <span class="icon">🤖</span>
-            <div>
-                <div class="text">AI Mode Active</div>
-                <div class="subtext">Content loaded automatically from URL parameters</div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1><span>iTabs</span> Generator</h1>
+            <p>Paste a YouTube link → Get your guide</p>
+            <div class="badge">✨ Auto-fetch transcript — no copy-paste</div>
+        </div>
+
+        <!-- How it works -->
+        <div class="how-it-works">
+            <h3>How it works</h3>
+            <div class="flow">
+                <div class="flow-step">📋 Paste YouTube URL</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">⚡ Auto-fetch transcript</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">🤖 AI creates guide</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">📱 Download iTabs</div>
             </div>
         </div>
-        <div class="grid">
-            <div class="panel input-panel">
-                <h2>🔗 Fetch from URL</h2>
-                <div class="url-row">
-                    <input type="text" class="url-input" id="urlInput" placeholder="https://raw.githubusercontent.com/.../SKILL.md">
-                    <button class="btn-fetch" id="fetchBtn">Fetch</button>
-                </div>
-                <div class="fetch-status" id="fetchStatus"></div>
-                
-                <div class="or-divider">or paste directly</div>
-                
-                <h2>📄 Paste SKILL.md</h2>
-                <textarea id="input" placeholder="Paste your SKILL.md content here..."></textarea>
-                <div class="btn-row">
-                    <button class="btn-primary" id="convertBtn">Convert to iTabs</button>
-                    <button class="btn-secondary" id="exampleBtn">Load Example</button>
-                    <button class="btn-secondary" id="clearBtn">Clear</button>
-                </div>
+
+        <!-- Step 1: YouTube URL -->
+        <div class="step active" id="step1">
+            <div class="step-label">Step 1</div>
+            <h2>YouTube Video</h2>
+            <p class="hint">Paste the URL and we'll grab the transcript automatically</p>
+
+            <label for="videoUrl">YouTube URL</label>
+            <div class="url-row">
+                <input type="text" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." 
+                       oninput="updateThumbnail()">
+                <button class="btn btn-primary" id="fetchBtn" onclick="fetchTranscript()">
+                    Fetch
+                </button>
             </div>
-            <div class="panel">
-                <h2>👁️ Preview</h2>
-                <div class="preview" id="preview">
-                    <div class="preview-empty">Paste a SKILL.md and click Convert<br><br><span style="font-size: 13px;">Or click "Load Example" to see it in action</span></div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn-green" id="downloadBtn" style="display:none;">Download iTabs HTML</button>
-                    <button class="btn-blue" id="downloadSkillBtn" style="display:none;">Download SKILL.md</button>
-                    <button class="btn-secondary" id="copyJsonBtn" style="display:none;">Copy JSON</button>
-                </div>
-                <div id="jsonOutput"></div>
+
+            <div id="fetchStatus"></div>
+
+            <!-- Transcript preview (appears after fetch) -->
+            <div id="transcriptResult" style="display:none">
+                <div class="stats" id="transcriptStats"></div>
+                <details class="transcript-preview">
+                    <summary>View raw transcript</summary>
+                    <div class="transcript-text" id="transcriptText"></div>
+                </details>
+            </div>
+
+            <div class="or-divider">or paste your own transcript below</div>
+
+            <label for="manualTranscript">Manual transcript (optional)</label>
+            <textarea id="manualTranscript" placeholder="If auto-fetch doesn't work, paste your transcript here..."></textarea>
+
+            <div class="api-info">
+                <strong>Free APIs used:</strong> We try two free transcript services (no API key needed, no account). 
+                If both fail, paste your transcript manually using the 
+                <a href="https://youtubetotranscript.com" target="_blank" style="color:var(--accent)">YouTubeToTranscript</a> site.
             </div>
         </div>
-        <div class="panel" style="margin-top: 20px;">
-            <h2>🤖 AI / API Usage</h2>
-            <p style="color: #8b98a5; margin-bottom: 15px;">AIs can call this tool directly using URL parameters:</p>
-            <pre style="background: #0f1419; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 13px; color: #00ba7c;">https://boilermaker-innovator.github.io/iTabs-skillmd-presenter/?content=URL_ENCODED_SKILL_CONTENT</pre>
-            <p style="color: #8b98a5; margin-top: 15px; font-size: 13px;"><strong>Parameters:</strong></p>
-            <ul style="color: #8b98a5; margin-left: 20px; font-size: 13px;">
-                <li><code style="background: #0f1419; padding: 2px 6px; border-radius: 4px;">content</code> - URL-encoded SKILL.md content (required)</li>
-                <li><code style="background: #0f1419; padding: 2px 6px; border-radius: 4px;">url</code> - Fetch SKILL.md from URL (alternative to content)</li>
-                <li><code style="background: #0f1419; padding: 2px 6px; border-radius: 4px;">autoconvert=true</code> - Auto-convert on load (default: true)</li>
-                <li><code style="background: #0f1419; padding: 2px 6px; border-radius: 4px;">output=json</code> - Return JSON instead of preview</li>
-                <li><code style="background: #0f1419; padding: 2px 6px; border-radius: 4px;">expand=all</code> - Auto-expand all sections</li>
-            </ul>
+
+        <!-- Step 2: Gemini API Key -->
+        <div class="step" id="step2">
+            <div class="step-label">Step 2</div>
+            <h2>Gemini AI Key</h2>
+            <p class="hint">Free from Google — creates the teachable content</p>
+
+            <label for="geminiKey">API Key</label>
+            <div class="key-row">
+                <input type="text" id="geminiKey" placeholder="AIza..." 
+                       value="">
+                <button class="btn btn-secondary" onclick="saveKey()">Save</button>
+            </div>
+            <div id="keyStatus"></div>
+
+            <div class="api-info">
+                Don't have one? <a href="https://aistudio.google.com/apikey" target="_blank" 
+                style="color:var(--accent)">Get a free Gemini API key</a> (takes 30 seconds)
+            </div>
+        </div>
+
+        <!-- Step 3: Context -->
+        <div class="step" id="step3">
+            <div class="step-label">Step 3</div>
+            <h2>Quick Context</h2>
+            <p class="hint">Help the AI make a better guide</p>
+
+            <label for="audience">Who is this for?</label>
+            <input type="text" id="audience" placeholder="e.g. Me — a boilermaker learning about AI tools" 
+                   style="margin-bottom: 12px;">
+
+            <label for="goal">What do you want to remember?</label>
+            <input type="text" id="goal" placeholder="e.g. The key steps for setting up Claude Code">
+        </div>
+
+        <!-- Generate Button -->
+        <div style="text-align: center; margin: 24px 0;">
+            <button class="btn btn-success" id="generateBtn" onclick="generateiTabs()" 
+                    style="padding: 14px 32px; font-size: 1rem;" disabled>
+                🚀 Create My iTabs Guide
+            </button>
+            <div id="generateStatus" style="margin-top: 12px;"></div>
+        </div>
+
+        <!-- Output -->
+        <div class="output-section" id="outputSection">
+            <div class="step">
+                <div class="step-label" style="color: var(--success)">Done</div>
+                <h2>Your iTabs Guide</h2>
+                <p class="hint">Preview it, then download</p>
+
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button class="btn btn-primary" onclick="previewOutput()">👁 Preview</button>
+                    <button class="btn btn-success" onclick="downloadOutput()">💾 Download HTML</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Built by Jon — boilermaker from Perth, vibe coding with Claude<br>
+            <a href="https://itabs.ai">itabs.ai</a>
         </div>
     </div>
-<script>
-var parsedData = null;
-var originalSource = null;
-var input = document.getElementById('input');
-var preview = document.getElementById('preview');
-var urlInput = document.getElementById('urlInput');
-var fetchBtn = document.getElementById('fetchBtn');
-var fetchStatus = document.getElementById('fetchStatus');
-var convertBtn = document.getElementById('convertBtn');
-var exampleBtn = document.getElementById('exampleBtn');
-var clearBtn = document.getElementById('clearBtn');
-var downloadBtn = document.getElementById('downloadBtn');
-var downloadSkillBtn = document.getElementById('downloadSkillBtn');
-var copyJsonBtn = document.getElementById('copyJsonBtn');
-var jsonOutput = document.getElementById('jsonOutput');
-var aiBanner = document.getElementById('aiBanner');
 
-// iTabs SKILL.md as the example
-var exampleSkill = `---
-name: itabs
-description: Create iTabs guides - interactive, expandable HTML reference guides for action-oriented learning. Use when users want to convert videos, articles, courses, documentation, or SKILL.md files into tappable reference guides they can use months later. Triggers on requests like "turn this into an iTabs", "make a reference guide", "I want to remember this", or "create an interactive guide".
----
+    <script>
+        // ========================================
+        // STATE
+        // ========================================
+        let transcriptData = null;
+        let videoId = null;
+        let generatedHTML = null;
 
-# iTabs Guide Creator
-
-iTabs transforms content into action-oriented reference guides. The core test: **"Can I take action within 30 seconds of opening this, even after 6 months?"**
-
-## Philosophy
-
-iTabs is about **action, not information storage**.
-
-- NOT a summary tool, note system, or bookmark manager
-- IS a coach that helps you DO things
-- Every section answers: Why am I doing this? What do I do? How do I get unstuck?
-
-## The Three Tabs Pattern
-
-Every iTabs section uses this structure:
-
-| Tab | Purpose | Content |
-|-----|---------|---------|
-| **Why** | Just enough context | 2-3 sentences max. Only what's needed to understand the action. |
-| **Do** | Step-by-step actions | Numbered steps. One action per step. Include "you should see X" confirmations. |
-| **Help** | Get unstuck | Common issues, copy-paste prompts for AI help, troubleshooting. |
-
-Not every section needs all three tabs. Use what's appropriate.
-
-## Output Format
-
-Single self-contained HTML file with:
-- Dark theme (bg: #0d1117, cards: #161b22, text: #e6edf3)
-- Expandable sections (blue "i" buttons)
-- Tabs within sections
-- Mobile-first, works offline
-- No external dependencies except Google Fonts
-
-## Smart Links
-
-When including external links, use tap-to-preview popups:
-
-\`\`\`javascript
-const linkData = {
-    'link-id': {
-        title: "Link Name",
-        what: "Plain explanation of what this is",
-        why: "Why it matters to the reader",
-        url: "https://..."
-    }
-};
-\`\`\`
-
-User taps link → sees preview popup → chooses to open or dismiss.
-
-## Content Guidelines
-
-### What to Include
-- Actionable steps (numbered, one action each)
-- Key decisions and why they matter
-- Common mistakes and how to avoid them
-- Copy-paste templates and prompts
-
-### What to Exclude
-- Background fluff from source material
-- Information available via quick search
-- Lengthy explanations (link to source instead)
-- Anything that doesn't help take action
-
-## Writing Style
-
-- Use "you" language
-- Present tense, imperative mood
-- Short sentences
-- Bullet points for lists, numbered for sequences
-
-## Special Sections
-
-### Jon's Notes (Optional)
-Personal insights in casual voice. Green left border.
-
-### Key Points
-Highlight critical information with emphasis styling.
-
-## CSS Variables
-
-\`\`\`css
-:root {
-    --bg-dark: #0d1117;
-    --bg-card: #161b22;
-    --bg-hover: #21262d;
-    --accent-blue: #58a6ff;
-    --accent-green: #3fb950;
-    --accent-purple: #a371f7;
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --border: #30363d;
-}
-\`\`\`
-
-## Conversion Process
-
-1. **Identify the core actions** - What will the reader DO with this?
-2. **Group into sections** - Each section = one topic or task
-3. **Apply Why/Do/Help** - Not every section needs all three
-4. **Add Smart Links** - For any external resources
-5. **Test the 30-second rule** - Can you act immediately?
-
-## Quality Checklist
-
-Before delivering an iTabs guide:
-
-- [ ] Opens in 30 seconds to useful action?
-- [ ] Each section has clear purpose?
-- [ ] Steps are numbered and single-action?
-- [ ] No fluff or filler content?
-- [ ] Works on mobile?
-- [ ] All links have Smart Link popups?
-- [ ] Dark theme applied correctly?`;
-
-// URL parameter handling
-var params = new URLSearchParams(window.location.search);
-var contentParam = params.get('content');
-var urlParam = params.get('url');
-var autoConvert = params.get('autoconvert') !== 'false';
-var outputJson = params.get('output') === 'json';
-var expandAll = params.get('expand') === 'all';
-
-if (urlParam) {
-    aiBanner.style.display = 'flex';
-    document.body.classList.add('ai-output-mode');
-    urlInput.value = urlParam;
-    fetchUrl(urlParam, true);
-} else if (contentParam) {
-    aiBanner.style.display = 'flex';
-    document.body.classList.add('ai-output-mode');
-    var decoded = decodeURIComponent(contentParam);
-    input.value = decoded;
-    if (autoConvert) convert(decoded, expandAll);
-}
-
-// Fetch URL functionality
-fetchBtn.addEventListener('click', function() {
-    var url = urlInput.value.trim();
-    if (url) fetchUrl(url, false);
-});
-
-urlInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        var url = urlInput.value.trim();
-        if (url) fetchUrl(url, false);
-    }
-});
-
-function fetchUrl(url, isAutoMode) {
-    fetchStatus.textContent = 'Fetching...';
-    fetchStatus.className = 'fetch-status';
-    
-    // Handle GitHub URLs - convert to raw if needed
-    var targetUrl = url;
-    if (url.includes('github.com') && !url.includes('raw.githubusercontent.com')) {
-        targetUrl = url
-            .replace('github.com', 'raw.githubusercontent.com')
-            .replace('/blob/', '/');
-    }
-    
-    // Use CORS proxy for cross-origin requests
-    var corsProxy = 'https://api.allorigins.win/raw?url=';
-    var fetchUrl = corsProxy + encodeURIComponent(targetUrl);
-    
-    fetch(fetchUrl)
-        .then(function(response) {
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            return response.text();
-        })
-        .then(function(text) {
-            input.value = text;
-            fetchStatus.textContent = '✓ Fetched successfully';
-            fetchStatus.className = 'fetch-status success';
-            convert(text, expandAll);
-        })
-        .catch(function(err) {
-            fetchStatus.textContent = '✗ Failed to fetch: ' + err.message;
-            fetchStatus.className = 'fetch-status error';
-            if (isAutoMode) {
-                preview.innerHTML = '<div class="preview-empty" style="color: #f85149;">Failed to fetch URL: ' + escapeHtml(err.message) + '</div>';
-            }
-        });
-}
-
-convertBtn.addEventListener('click', function() { convert(input.value, false); });
-exampleBtn.addEventListener('click', function() { 
-    input.value = exampleSkill; 
-    convert(exampleSkill, false); 
-});
-clearBtn.addEventListener('click', function() { 
-    input.value = ''; 
-    preview.innerHTML = '<div class="preview-empty">Paste a SKILL.md and click Convert</div>'; 
-    downloadBtn.style.display = 'none'; 
-    downloadSkillBtn.style.display = 'none';
-    copyJsonBtn.style.display = 'none'; 
-    jsonOutput.style.display = 'none'; 
-    parsedData = null;
-    originalSource = null;
-    urlInput.value = '';
-    fetchStatus.textContent = '';
-});
-
-downloadBtn.addEventListener('click', function() {
-    if (!parsedData) return;
-    var html = generateHTML();
-    var blob = new Blob([html], { type: 'text/html' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = parsedData.name.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-itabs.html';
-    a.click();
-});
-
-downloadSkillBtn.addEventListener('click', function() {
-    if (!originalSource) return;
-    var blob = new Blob([originalSource], { type: 'text/markdown' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = (parsedData ? parsedData.name.replace(/[^a-z0-9]/gi, '-').toLowerCase() : 'skill') + '-SKILL.md';
-    a.click();
-});
-
-copyJsonBtn.addEventListener('click', function() {
-    if (!parsedData) return;
-    var json = JSON.stringify(parsedData, null, 2);
-    navigator.clipboard.writeText(json);
-    jsonOutput.textContent = json;
-    jsonOutput.style.display = 'block';
-});
-
-function convert(text, expandAll) {
-    if (!text.trim()) { 
-        preview.innerHTML = '<div class="preview-empty">No content to convert</div>'; 
-        return; 
-    }
-    originalSource = text;
-    var name = 'Untitled Skill';
-    var description = '';
-    var body = text;
-    if (text.indexOf('---') === 0) {
-        var parts = text.split('---');
-        if (parts.length >= 3) {
-            var fm = parts[1];
-            body = parts.slice(2).join('---');
-            var nameMatch = fm.match(/name:\s*(.+)/);
-            if (nameMatch) name = nameMatch[1].trim();
-            var descMatch = fm.match(/description:\s*(.+)/);
-            if (descMatch) description = descMatch[1].trim();
+        // Load saved Gemini key
+        const savedKey = localStorage.getItem('gemini_api_key');
+        if (savedKey) {
+            document.getElementById('geminiKey').value = savedKey;
         }
-    }
-    var sections = [];
-    var lines = body.split('\n');
-    var current = null;
-    var introLines = [];
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        if (line.indexOf('## ') === 0) {
-            if (introLines.length > 0 && sections.length === 0 && !current) {
-                var introText = introLines.join('\n').trim();
-                if (introText) { sections.push({ title: 'Overview', content: introLines }); }
+
+        // ========================================
+        // VIDEO ID EXTRACTION
+        // ========================================
+        function extractVideoId(url) {
+            const patterns = [
+                /(?:v=|\/v\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+                /(?:embed\/)([a-zA-Z0-9_-]{11})/,
+                /^([a-zA-Z0-9_-]{11})$/
+            ];
+            for (const p of patterns) {
+                const m = url.match(p);
+                if (m) return m[1];
             }
-            if (current) sections.push(current);
-            current = { title: line.substring(3).trim(), content: [] };
-        } else if (line.indexOf('# ') === 0 && !current) {
-            if (introLines.length > 0 && sections.length === 0) {
-                var introText = introLines.join('\n').trim();
-                if (introText) { sections.push({ title: 'Overview', content: introLines }); }
+            return null;
+        }
+
+        function updateThumbnail() {
+            const url = document.getElementById('videoUrl').value.trim();
+            videoId = extractVideoId(url);
+            checkReady();
+        }
+
+        // ========================================
+        // TRANSCRIPT FETCHING — TWO FREE APIs
+        // ========================================
+        async function fetchTranscript() {
+            const url = document.getElementById('videoUrl').value.trim();
+            videoId = extractVideoId(url);
+
+            if (!videoId) {
+                showStatus('fetchStatus', 'error', "Can't find a video ID in that URL. Check the link?");
+                return;
             }
-            current = { title: line.substring(2).trim(), content: [] };
-        } else if (current) {
-            current.content.push(line);
-        } else {
-            introLines.push(line);
+
+            const fetchBtn = document.getElementById('fetchBtn');
+            fetchBtn.disabled = true;
+            fetchBtn.textContent = '...';
+
+            showStatus('fetchStatus', 'loading', 'Fetching transcript (API 1 of 2)...');
+
+            // Try API 1: jaypaun007's free Vercel API
+            try {
+                const resp1 = await fetchWithTimeout(
+                    'https://youtube-transcript-api-tau-one.vercel.app/transcript',
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ video_url: `https://www.youtube.com/watch?v=${videoId}` })
+                    },
+                    15000
+                );
+
+                if (resp1.ok) {
+                    const data = await resp1.json();
+                    if (data.transcript && data.transcript.length > 50) {
+                        transcriptData = data.transcript;
+                        showTranscriptSuccess(transcriptData, 'Free API (no key needed)');
+                        fetchBtn.disabled = false;
+                        fetchBtn.textContent = 'Fetch';
+                        checkReady();
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('API 1 failed:', e.message);
+            }
+
+            // Try API 2: mongj's Vercel API (with timestamps)
+            showStatus('fetchStatus', 'loading', 'API 1 didn\'t work, trying API 2...');
+
+            try {
+                const resp2 = await fetchWithTimeout(
+                    `https://youtube-transcriber-api.vercel.app/v1/transcripts?id=${videoId}&lang=en&type=text&lb=1`,
+                    { method: 'GET' },
+                    15000
+                );
+
+                if (resp2.ok) {
+                    const data = await resp2.json();
+                    if (data.transcripts && data.transcripts.length > 0) {
+                        const bestTranscript = data.transcripts[0];
+                        transcriptData = bestTranscript.text || '';
+                        if (transcriptData.length > 50) {
+                            showTranscriptSuccess(transcriptData, 'Free API 2 (no key needed)');
+                            fetchBtn.disabled = false;
+                            fetchBtn.textContent = 'Fetch';
+                            checkReady();
+                            return;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('API 2 failed:', e.message);
+            }
+
+            // Try API 3: Scribr / alternative endpoint
+            showStatus('fetchStatus', 'loading', 'Trying one more...');
+
+            try {
+                const resp3 = await fetchWithTimeout(
+                    `https://youtube-transcriber-api.vercel.app/v1/transcripts?id=${videoId}&type=text`,
+                    { method: 'GET' },
+                    15000
+                );
+
+                if (resp3.ok) {
+                    const data = await resp3.json();
+                    if (data.transcripts && data.transcripts.length > 0) {
+                        transcriptData = data.transcripts[0].text || '';
+                        if (transcriptData.length > 50) {
+                            showTranscriptSuccess(transcriptData, 'Scribr API (free)');
+                            fetchBtn.disabled = false;
+                            fetchBtn.textContent = 'Fetch';
+                            checkReady();
+                            return;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('API 3 failed:', e.message);
+            }
+
+            // All failed
+            showStatus('fetchStatus', 'error', 
+                "Couldn't auto-fetch this transcript. The video might not have captions, or the free APIs are busy. " +
+                "No worries — paste it manually below.");
+            fetchBtn.disabled = false;
+            fetchBtn.textContent = 'Fetch';
         }
-    }
-    if (current) sections.push(current);
-    if (sections.length === 0 && introLines.length > 0) { sections.push({ title: 'Overview', content: introLines }); }
-    if (sections.length === 0) { sections.push({ title: 'Overview', content: body.split('\n') }); }
-    parsedData = { name: name, description: description, sections: sections };
-    var html = '<div class="skill-header"><h3>' + escapeHtml(name) + '</h3><p>' + escapeHtml(description) + '</p></div>';
-    for (var j = 0; j < sections.length; j++) {
-        var s = sections[j];
-        var content = parseContent(s.content.join('\n'));
-        var showClass = expandAll ? ' show' : '';
-        var toggleClass = expandAll ? ' open' : '';
-        var toggleText = expandAll ? '-' : '+';
-        html += '<div class="itab"><div class="itab-header" onclick="toggleItab(this)"><div class="itab-title"><span class="itab-num">' + (j+1) + '</span><span class="itab-name">' + escapeHtml(s.title) + '</span></div><button class="itab-toggle' + toggleClass + '">' + toggleText + '</button></div><div class="itab-content' + showClass + '">' + content + '</div></div>';
-    }
-    preview.innerHTML = html;
-    downloadBtn.style.display = 'inline-block';
-    downloadSkillBtn.style.display = 'inline-block';
-    copyJsonBtn.style.display = 'inline-block';
-}
 
-function toggleItab(header) {
-    var content = header.nextElementSibling;
-    var btn = header.querySelector('.itab-toggle');
-    if (content.classList.contains('show')) {
-        content.classList.remove('show');
-        btn.classList.remove('open');
-        btn.textContent = '+';
-    } else {
-        content.classList.add('show');
-        btn.classList.add('open');
-        btn.textContent = '-';
-    }
-}
-
-function parseContent(text) {
-    if (!text.trim()) return '<p><em>No content</em></p>';
-    text = text.replace(/```[\s\S]*?```/g, function(m) { return '<pre><code>' + escapeHtml(m.replace(/```\w*/g, '').trim()) + '</code></pre>'; });
-    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-    var lines = text.split('\n');
-    var result = [];
-    var inList = false;
-    for (var i = 0; i < lines.length; i++) {
-        var line = lines[i];
-        if (line.indexOf('- ') === 0) {
-            if (!inList) { result.push('<ul>'); inList = true; }
-            result.push('<li>' + line.substring(2) + '</li>');
-        } else if (line.match(/^\d+\. /)) {
-            if (!inList) { result.push('<ol>'); inList = true; }
-            result.push('<li>' + line.replace(/^\d+\. /, '') + '</li>');
-        } else {
-            if (inList) { result.push(inList === 'ol' ? '</ol>' : '</ul>'); inList = false; }
-            if (line.trim()) result.push('<p>' + line + '</p>');
+        function fetchWithTimeout(url, options, timeout) {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), timeout)
+                )
+            ]);
         }
+
+        function showTranscriptSuccess(text, source) {
+            const wordCount = text.split(/\s+/).length;
+            const readMins = Math.ceil(wordCount / 200);
+
+            document.getElementById('transcriptResult').style.display = 'block';
+            document.getElementById('transcriptStats').innerHTML = `
+                <div class="stat"><strong>${wordCount.toLocaleString()}</strong> words</div>
+                <div class="stat"><strong>~${readMins} min</strong> read</div>
+                <div class="stat">via <strong>${source}</strong></div>
+            `;
+            document.getElementById('transcriptText').textContent = text.substring(0, 3000) + 
+                (text.length > 3000 ? '\n\n... [truncated for preview]' : '');
+
+            showStatus('fetchStatus', 'success', `Transcript fetched — ${wordCount.toLocaleString()} words`);
+        }
+
+        // ========================================
+        // GEMINI KEY
+        // ========================================
+        function saveKey() {
+            const key = document.getElementById('geminiKey').value.trim();
+            if (key) {
+                localStorage.setItem('gemini_api_key', key);
+                showStatus('keyStatus', 'success', 'Key saved locally');
+                checkReady();
+            }
+        }
+
+        // ========================================
+        // READY CHECK
+        // ========================================
+        function checkReady() {
+            const hasTranscript = transcriptData || document.getElementById('manualTranscript').value.trim().length > 50;
+            const hasKey = document.getElementById('geminiKey').value.trim().length > 5;
+            const hasVideo = !!videoId;
+
+            document.getElementById('generateBtn').disabled = !(hasTranscript && hasKey && hasVideo);
+        }
+
+        // Listen for manual transcript changes too
+        document.getElementById('manualTranscript').addEventListener('input', checkReady);
+        document.getElementById('geminiKey').addEventListener('input', checkReady);
+
+        // ========================================
+        // GENERATE iTABS
+        // ========================================
+        async function generateiTabs() {
+            const key = document.getElementById('geminiKey').value.trim();
+            const transcript = transcriptData || document.getElementById('manualTranscript').value.trim();
+            const audience = document.getElementById('audience').value.trim() || 'Someone who wants to learn and take action';
+            const goal = document.getElementById('goal').value.trim() || 'Remember the key concepts and steps';
+
+            if (!transcript || !key || !videoId) return;
+
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+            generateBtn.textContent = '⏳ Creating guide...';
+
+            showStatus('generateStatus', 'loading', 'Sending to Gemini AI...');
+
+            const prompt = `You are an expert at creating teachable, action-oriented guides from video content.
+
+Given this transcript from a YouTube video, create an iTabs guide.
+
+AUDIENCE: ${audience}
+GOAL: ${goal}
+VIDEO ID: ${videoId}
+
+RULES:
+- Extract 4-7 key sections from the video
+- Each section needs: a clear title, a "Why it matters" explanation, the key steps/facts, and a practical takeaway
+- Write in simple, everyday language — no jargon
+- Include timestamps where you can identify them from the transcript
+- Focus on ACTION — what should the reader DO with this info?
+- Make it scannable — someone should find what they need in 30 seconds
+
+OUTPUT FORMAT — Return ONLY valid JSON, no markdown backticks:
+{
+  "title": "Guide title",
+  "sections": [
+    {
+      "number": 1,
+      "title": "Section Title",
+      "why": "Why this matters (1-2 sentences)",
+      "content": "The key info, steps, or facts (2-4 sentences)",
+      "takeaway": "What to DO with this info",
+      "timestamp": "M:SS"
     }
-    if (inList) result.push('</ul>');
-    return result.join('') || '<p><em>No content</em></p>';
+  ]
 }
 
-function escapeHtml(text) {
-    var div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+TRANSCRIPT:
+${transcript.substring(0, 25000)}`;
 
-function generateHTML() {
-    var sections = '';
-    for (var i = 0; i < parsedData.sections.length; i++) {
-        var s = parsedData.sections[i];
-        sections += '<div class="itab"><div class="itab-header" onclick="toggle(this)"><div class="itab-title"><span class="itab-num">' + (i+1) + '</span><span class="itab-name">' + escapeHtml(s.title) + '</span></div><button class="itab-toggle">+</button></div><div class="itab-content">' + parseContent(s.content.join('\n')) + '</div></div>';
-    }
-    
-    var encodedSource = btoa(unescape(encodeURIComponent(originalSource || '')));
-    
-    return '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(parsedData.name) + '</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0f1419;color:#e7e9ea;padding:20px;max-width:700px;margin:0 auto;line-height:1.6}.header{background:linear-gradient(135deg,rgba(120,86,255,0.2),rgba(29,155,240,0.2));border:1px solid #7856ff;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px}.header h1{color:#7856ff;font-size:1.5rem;margin-bottom:8px}.header p{color:#8b98a5;font-size:14px}.btn-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}.btn{padding:10px 20px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}.btn-blue{background:#1d9bf0;color:white}.btn-blue:hover{background:#1a8cd8}.itab{background:#1a1f26;border:1px solid #2f3336;border-radius:10px;margin-bottom:10px;overflow:hidden}.itab-header{display:flex;justify-content:space-between;align-items:center;padding:15px;cursor:pointer}.itab-header:hover{background:#242b35}.itab-title{display:flex;align-items:center;gap:10px}.itab-num{width:28px;height:28px;background:#7856ff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold}.itab-name{font-weight:600}.itab-toggle{width:26px;height:26px;background:#7856ff;border:none;border-radius:6px;color:white;font-weight:bold;cursor:pointer}.itab-toggle.open{background:#00ba7c}.itab-content{display:none;padding:15px;border-top:1px solid #2f3336;color:#8b98a5}.itab-content.show{display:block}.itab-content p{margin:10px 0}.itab-content ul,.itab-content ol{margin:10px 0;padding-left:20px}.itab-content li{margin:5px 0}.itab-content strong{color:#e7e9ea}.itab-content code{background:#0f1419;padding:2px 6px;border-radius:4px}.itab-content pre{background:#0f1419;padding:12px;border-radius:6px;overflow-x:auto;margin:10px 0}.footer{text-align:center;padding:20px;color:#8b98a5;font-size:12px}</style></head><body><div class="header"><h1>' + escapeHtml(parsedData.name) + '</h1><p>' + escapeHtml(parsedData.description) + '</p></div><div class="btn-row"><button class="btn btn-blue" onclick="downloadSkill()">Download SKILL.md</button></div>' + sections + '<div class="footer">Converted to iTabs format • <a href="https://boilermaker-innovator.github.io/iTabs-skillmd-presenter/" style="color:#7856ff;">Create your own</a></div><script>var src="' + encodedSource + '";function toggle(h){var c=h.nextElementSibling,b=h.querySelector(".itab-toggle");if(c.classList.contains("show")){c.classList.remove("show");b.classList.remove("open");b.textContent="+"}else{c.classList.add("show");b.classList.add("open");b.textContent="-"}}function downloadSkill(){var text=decodeURIComponent(escape(atob(src)));var blob=new Blob([text],{type:"text/markdown"});var url=URL.createObjectURL(blob);var a=document.createElement("a");a.href=url;a.download="' + parsedData.name.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '-SKILL.md";a.click()}<\/script></body></html>';
-}
-</script>
+            try {
+                const resp = await fetch(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 4096
+                            }
+                        })
+                    }
+                );
+
+                if (!resp.ok) {
+                    const err = await resp.text();
+                    throw new Error(`Gemini error: ${resp.status} — ${err.substring(0, 200)}`);
+                }
+
+                const data = await resp.json();
+                const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+                // Parse JSON from response (strip backticks if present)
+                const cleaned = rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                const guide = JSON.parse(cleaned);
+
+                generatedHTML = buildHTML(guide);
+                showStatus('generateStatus', 'success', 'Guide created! Preview or download below.');
+                document.getElementById('outputSection').classList.add('visible');
+
+            } catch (err) {
+                showStatus('generateStatus', 'error', `Error: ${err.message}`);
+            }
+
+            generateBtn.disabled = false;
+            generateBtn.textContent = '🚀 Create My iTabs Guide';
+            checkReady();
+        }
+
+        // ========================================
+        // BUILD THE iTABS HTML
+        // ========================================
+        function buildHTML(guide) {
+            const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+            let sectionsHTML = '';
+            guide.sections.forEach((s, i) => {
+                const tsLink = s.timestamp ? 
+                    `<a href="${videoUrl}&t=${timestampToSeconds(s.timestamp)}" target="_blank" class="timestamp">▶ ${s.timestamp}</a>` : '';
+
+                sectionsHTML += `
+        <div class="itab-section">
+            <div class="itab-header" onclick="toggleSection(this)">
+                <div class="itab-title">
+                    <span class="itab-number">${s.number || i+1}</span>
+                    <span class="itab-name">${escapeHtml(s.title)}</span>
+                </div>
+                <button class="i-button">i</button>
+            </div>
+            <div class="itab-content">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab(this, 'why-${i}')">Why It Matters</button>
+                    <button class="tab" onclick="showTab(this, 'what-${i}')">Key Info</button>
+                    <button class="tab" onclick="showTab(this, 'do-${i}')">What To Do</button>
+                </div>
+                <div class="tab-panel show" id="why-${i}">
+                    <p>${escapeHtml(s.why)}</p>
+                    ${tsLink}
+                </div>
+                <div class="tab-panel" id="what-${i}">
+                    <p>${escapeHtml(s.content)}</p>
+                </div>
+                <div class="tab-panel" id="do-${i}">
+                    <p><strong>→ </strong>${escapeHtml(s.takeaway)}</p>
+                </div>
+            </div>
+        </div>`;
+            });
+
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(guide.title)} — iTabs Guide</title>
+    <meta property="og:title" content="${escapeHtml(guide.title)}">
+    <meta property="og:image" content="${thumbUrl}">
+    <style>
+        :root {
+            --bg: #0f1117; --surface: #1a1d27; --surface-2: #232733;
+            --border: #2d3140; --text: #e4e6ef; --text-dim: #8b8fa3;
+            --accent: #3b82f6; --success: #22c55e; --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+        h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+        .subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 16px; }
+        .video-embed { position: relative; padding-bottom: 56.25%; height: 0; border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; }
+        .video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .itab-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .itab-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; }
+        .itab-title { display: flex; align-items: center; gap: 10px; }
+        .itab-number { background: var(--accent); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+        .itab-name { font-weight: 600; font-size: 0.95rem; }
+        .i-button { background: var(--accent); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: 700; font-size: 0.85rem; cursor: pointer; flex-shrink: 0; }
+        .itab-content { display: none; padding: 0 16px 16px; }
+        .itab-section.open .itab-content { display: block; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+        .tab { background: var(--surface-2); color: var(--text-dim); border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; font-family: inherit; }
+        .tab.active { background: var(--accent); color: white; }
+        .tab-panel { display: none; }
+        .tab-panel.show { display: block; }
+        .tab-panel p { font-size: 0.9rem; line-height: 1.7; }
+        .timestamp { display: inline-block; margin-top: 10px; color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+        .timestamp:hover { text-decoration: underline; }
+        footer { text-align: center; color: var(--text-dim); font-size: 0.75rem; margin-top: 24px; padding: 16px 0; border-top: 1px solid var(--border); }
+        footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>${escapeHtml(guide.title)}</h1>
+        <p class="subtitle">iTabs Guide • Tap sections to explore</p>
+
+        <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+        </div>
+
+        ${sectionsHTML}
+
+        <footer>
+            Created with <a href="https://itabs.ai">iTabs</a> — watch once, reference forever
+        </footer>
+    </div>
+
+    <` + `script>
+        function toggleSection(header) {
+            const section = header.closest('.itab-section');
+            section.classList.toggle('open');
+        }
+
+        function showTab(btn, panelId) {
+            const section = btn.closest('.itab-content');
+            section.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            section.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('show'));
+            btn.classList.add('active');
+            document.getElementById(panelId).classList.add('show');
+        }
+
+        // Open first section by default
+        document.querySelector('.itab-section')?.classList.add('open');
+    <` + `/script>
+</body>
+</html>`;
+        }
+
+        // ========================================
+        // HELPERS
+        // ========================================
+        function timestampToSeconds(ts) {
+            if (!ts) return 0;
+            const parts = ts.split(':').map(Number);
+            if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+            if (parts.length === 2) return parts[0]*60 + parts[1];
+            return parts[0] || 0;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showStatus(elementId, type, message) {
+            const el = document.getElementById(elementId);
+            const spinner = type === 'loading' ? '<div class="spinner"></div>' : '';
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : '';
+            el.innerHTML = `<div class="status ${type}">${spinner}${icon} ${message}</div>`;
+        }
+
+        function previewOutput() {
+            if (!generatedHTML) return;
+            const win = window.open('', '_blank');
+            win.document.write(generatedHTML);
+            win.document.close();
+        }
+
+        function downloadOutput() {
+            if (!generatedHTML) return;
+            const blob = new Blob([generatedHTML], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `itabs-guide-${videoId}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initial check
+        checkReady();
+    </script>
 </body>
 </html>
